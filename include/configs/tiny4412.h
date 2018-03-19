@@ -28,6 +28,11 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+// mz8023yt@163.com 20180319 begin >>> [1/1] support dts
+#define CONFIG_OF_LIBFDT
+#define CONFIG_SYS_BOOTMAPSZ (20 << 20)
+// mz8023yt@163.com 20180319 end   <<< [1/1] support dts
+
 /*
  * High Level Configuration Options
  * (easy to change)
