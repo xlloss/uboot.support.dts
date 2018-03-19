@@ -591,6 +591,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	int		ret;
 	boot_os_fn	*boot_fn;
 
+// mz8023yt@163.com 20180319 begin >>> [1/3] support bootm uImage
+	int		iszImage = 0;
+// mz8023yt@163.com 20180319 end   <<< [1/3] support bootm uImage
+
 #ifdef CONFIG_SECURE_BOOT
 #ifndef CONFIG_SECURE_BL1_ONLY
 	security_check();
@@ -626,6 +630,10 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		images.legacy_hdr_os = hdr;
 
 		images.legacy_hdr_valid = 1;
+
+// mz8023yt@163.com 20180319 begin >>> [2/3] support bootm uImage
+		iszImage = 1;
+// mz8023yt@163.com 20180319 end   <<< [2/3] support bootm uImage
 
 		goto after_header_check;
 	}
@@ -723,8 +731,14 @@ int do_bootm (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 #if defined(CONFIG_ZIMAGE_BOOT)
 after_header_check:
-	images.os.os = hdr->ih_os;
-	images.ep = image_get_ep (&images.legacy_hdr_os_copy);
+
+// mz8023yt@163.com 20180319 begin >>> [3/3] support bootm uImage
+	if (iszImage) {
+		images.os.os = hdr->ih_os;
+		images.ep = image_get_ep (&images.legacy_hdr_os_copy);
+	}
+// mz8023yt@163.com 20180319 end   <<< [3/3] support bootm uImage
+
 #endif
 
 #ifdef CONFIG_SILENT_CONSOLE
