@@ -308,7 +308,9 @@
 #define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* 256 KiB */
 #define CONFIG_IDENT_STRING		" for TINY4412"
 
-#define CONFIG_ENABLE_MMU
+// mz8023yt@163.com 20180319 begin >>> [1/2] disable the mmu
+#undef CONFIG_ENABLE_MMU
+// mz8023yt@163.com 20180319 end   <<< [1/2] disable the mmu
 
 #ifdef CONFIG_ENABLE_MMU
 #define CONFIG_SYS_MAPPED_RAM_BASE	0xc0000000

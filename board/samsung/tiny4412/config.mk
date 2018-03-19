@@ -9,5 +9,7 @@
 #  published by the Free Software Foundation.
 #
 #
- 
-CONFIG_SYS_TEXT_BASE = 0xc3e00000
+
+# mz8023yt@163.com 20180319 begin >>> [2/2] disable the mmu
+CONFIG_SYS_TEXT_BASE = 0x43e00000
+# mz8023yt@163.com 20180319 end   <<< [2/2] disable the mmu
