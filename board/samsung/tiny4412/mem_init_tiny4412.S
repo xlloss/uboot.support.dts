@@ -20,8 +20,8 @@
 #endif
 
 
-	.globl mem_ctrl_asm_init
-mem_ctrl_asm_init:
+	.globl mem_ctrl_asm_init_r0
+mem_ctrl_asm_init_r0:
 
 	/* Async bridge configuration at CPU_core:
 	 * 1: half_sync
@@ -328,4 +328,3 @@ mem_ctrl_asm_init:
 	str	r1, [r0, #DMC_CONCONTROL]
 
 	mov	pc, lr
-
