@@ -18,7 +18,7 @@
 #define		_8_4GB				(1023*254*63)
 
 #define		CHS_MODE			0
-#define		LBA_MODE			!(CHS_MODE)	
+#define		LBA_MODE			!(CHS_MODE)
 
 typedef struct
 {
@@ -69,7 +69,7 @@ void encode_chs(int C, int H, int S, unsigned char *result)
 {
 	*result++ = (unsigned char) H;
 	*result++ = (unsigned char) ( S + ((C & 0x00000300) >> 2) );
-	*result   = (unsigned char) (C & 0x000000FF); 
+	*result   = (unsigned char) (C & 0x000000FF);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -86,8 +86,8 @@ void encode_partitionInfo(PartitionInfo partInfo, unsigned char *result)
 	result += 3;
 
 	*((int *)result) = partInfo.block_start;
-	result += 4;	
-	
+	result += 4;
+
 	*((int *)result) = partInfo.block_count;
 }
 
@@ -99,7 +99,7 @@ void get_SDInfo(int block_count, SDInfo *sdInfo)
 	int C_max = 1023, H_max = 255, S_max = 63;
 	int H_start = 1, S_start = 1;
 	int diff_min = 0, diff = 0;
-	
+
 	if(block_count >= _8_4GB)
 		sdInfo->addr_mode = LBA_MODE;
 	else
@@ -148,7 +148,7 @@ void make_partitionInfo(int LBA_start, int count, SDInfo sdInfo, PartitionInfo *
 {
 	int		temp = 0;
 	int		_10MB_unit;
-	
+
 	partInfo->block_start	= LBA_start;
 
 	if (sdInfo.addr_mode == CHS_MODE)
@@ -163,7 +163,7 @@ void make_partitionInfo(int LBA_start, int count, SDInfo sdInfo, PartitionInfo *
 			_10MB_unit = calc_unit(_10MB, sdInfo);
 			partInfo->block_end	= sdInfo.C_end * sdInfo.H_end * sdInfo.S_end - _10MB_unit - 1;
 			partInfo->block_count	= partInfo->block_end - partInfo->block_start + 1;
-	
+
 			partInfo->C_end	= partInfo->block_end / sdInfo.unit;
 			partInfo->H_end = sdInfo.H_end - 1;
 			partInfo->S_end = sdInfo.S_end;
@@ -171,10 +171,10 @@ void make_partitionInfo(int LBA_start, int count, SDInfo sdInfo, PartitionInfo *
 		else
 		{
 			partInfo->block_count	= count;
-	
+
 			partInfo->block_end	= partInfo->block_start + count - 1;
 			partInfo->C_end		= partInfo->block_end / sdInfo.unit;
-	
+
 			temp			= partInfo->block_end % sdInfo.unit;
 			partInfo->H_end		= temp / sdInfo.S_end;
 			partInfo->S_end		= temp % sdInfo.S_end + 1;
@@ -189,7 +189,7 @@ void make_partitionInfo(int LBA_start, int count, SDInfo sdInfo, PartitionInfo *
 		partInfo->C_end		= 1023;
 		partInfo->H_end		= 254;
 		partInfo->S_end		= 63;
-	
+
 		if (count == BLOCK_END)
 		{
 			_10MB_unit = calc_unit(_10MB, sdInfo);
@@ -226,9 +226,9 @@ int get_sd_block_count(char *devicefile)
 	fclose(fp);
 
 	block_count = atoi(buf);
-	
+
 	return block_count;
-} 
+}
 
 
 /////////////////////////////////////////////////////////////////
@@ -249,10 +249,10 @@ int main(int argc, char *argv[])
 		printf("Usage: sd_fdisk <device_file>\n");
 		return -1;
 	}
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 	memset((unsigned char *)&sdInfo, 0x00, sizeof(SDInfo));
 
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 	total_block_count = get_sd_block_count(argv[1]);
 	get_SDInfo(total_block_count, &sdInfo);
 /*
@@ -261,28 +261,28 @@ int main(int argc, char *argv[])
 	block_start	= calc_unit(_10MB, sdInfo);
 	block_offset	= calc_unit(_100MB, sdInfo);
 
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 	partInfo[0].bootable	= 0x00;
 	partInfo[0].partitionId	= 0x83;
 
 	make_partitionInfo(block_start, block_offset, sdInfo, &partInfo[0]);
 
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 	block_start += block_offset;
-	
+
 	partInfo[1].bootable	= 0x00;
 	partInfo[1].partitionId	= 0x83;
 
 	make_partitionInfo(block_start, block_offset, sdInfo, &partInfo[1]);
 
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 	block_start += block_offset;
 	partInfo[2].bootable	= 0x00;
 	partInfo[2].partitionId	= 0x83;
 
 	make_partitionInfo(block_start, block_offset, sdInfo, &partInfo[2]);
 */
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 //	block_start += block_offset;
 	block_start = calc_unit(_10MB, sdInfo);
 
@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
 
 	make_partitionInfo(block_start, BLOCK_END, sdInfo, &partInfo[3]);
 
-///////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////
 	memset(mbr, 0x00, sizeof(mbr));
 	mbr[510] = 0x55; mbr[511] = 0xAA;
 
@@ -300,7 +300,7 @@ int main(int argc, char *argv[])
 //	encode_partitionInfo(partInfo[1], &mbr[0x1DE]);
 //	encode_partitionInfo(partInfo[2], &mbr[0x1EE]);
 	encode_partitionInfo(partInfo[3], &mbr[0x1BE]);
-	
+
 	fp = fopen("sd_mbr.dat", "wb");
 	fwrite(mbr, 1, sizeof(mbr), fp);
 	fclose(fp);
