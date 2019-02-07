@@ -30,7 +30,7 @@
 
 // mz8023yt@163.com 20180319 begin >>> [1/1] support dts
 #define CONFIG_OF_LIBFDT
-#define CONFIG_SYS_BOOTMAPSZ (20 << 20)
+#define CONFIG_SYS_BOOTMAPSZ (100 << 20)
 // mz8023yt@163.com 20180319 end   <<< [1/1] support dts
 
 /*
